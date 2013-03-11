@@ -1,11 +1,12 @@
 import java.util.StringTokenizer;
 
 public class GestionnaireRequete {
-	public String erreur;
-	public String reponse;
+	private String erreur;
+	private String reponse;
 	private String[] typesRequetes = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"};
 	
 	public void traitementRequete(String requete) {
+		erreur = "";
 		reponse = "";
 		
 		if (requete.toUpperCase().equals("QUITTER")) {
@@ -14,12 +15,27 @@ public class GestionnaireRequete {
 		}
 		
 		StringTokenizer st = new StringTokenizer(requete, "#");
-		reponse = st.nextToken();
+		if (st.countTokens() == 2) {
+			String tmp = st.nextToken();
+			for (String typeRequete : typesRequetes) {
+				if (tmp.equals(typeRequete)) {
+					reponse = tmp;
+				}
+				else {
+					reponse = "Requête demandée incorrecte.";
+				}
+			}
+		}
+		
+		if (reponse.equals("") && erreur.equals("")) {
+			erreur = "Erreur de syntaxe dans la requete.";
+		}
 	}
 	
 	public String reponse() {
-		if (erreur.equals(""))
+		if (erreur.equals("")) {
 			return reponse;
+		}
 		return erreur;
 	}
 }
