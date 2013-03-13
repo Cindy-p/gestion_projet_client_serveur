@@ -1,10 +1,16 @@
+package modele;
 import java.util.StringTokenizer;
+import sql.ExecutionRequete;
 
 public class GestionnaireRequete {
 	private String erreur;
 	private String reponse;
 	private String[] typesRequetes = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"};
 	
+	public void setReponse(String reponse) {
+		this.reponse = reponse;
+	}
+
 	public void traitementRequete(String requete) {
 		erreur = "";
 		reponse = "";
@@ -14,6 +20,7 @@ public class GestionnaireRequete {
 			return;
 		}
 		
+		ExecutionRequete executionRequete = new ExecutionRequete();
 		StringTokenizer st = new StringTokenizer(requete, "#");
 		if (st.countTokens() == 2) {
 			String lettreRequete = st.nextToken();
@@ -26,7 +33,7 @@ public class GestionnaireRequete {
 							int code = Integer.parseInt(st2.nextToken());
 							String nom = st2.nextToken();
 							int duree = Integer.parseInt(st2.nextToken());
-							ajouterTache(code, nom, duree);
+							reponse = executionRequete.ajouterTache(code, nom, duree);
 						}
 					}
 					else if (typeRequete.equals("B")) {
@@ -35,13 +42,13 @@ public class GestionnaireRequete {
 							int code = Integer.parseInt(st2.nextToken());
 							String nom = st2.nextToken();
 							int duree = Integer.parseInt(st2.nextToken());
-							modifierTache(code, nom, duree);
+							reponse = executionRequete.modifierTache(code, nom, duree);
 						}
 					}
 					else if (typeRequete.equals("C")) {
 						if (infosRequete.length() == 1) {
 							int code = Integer.parseInt(infosRequete);
-							supprimerTache(code);
+							reponse = executionRequete.supprimerTache(code);
 						}
 					}
 					else if (typeRequete.equals("D")) {
@@ -49,7 +56,7 @@ public class GestionnaireRequete {
 						if (st2.countTokens() == 2) {
 							int code = Integer.parseInt(st2.nextToken());
 							String nom = st2.nextToken();
-							ajouterPersonne(code, nom);
+							reponse = executionRequete.ajouterPersonne(code, nom);
 						}
 					}
 					else if (typeRequete.equals("E")) {
@@ -57,7 +64,7 @@ public class GestionnaireRequete {
 						if (st2.countTokens() == 2) {
 							int code = Integer.parseInt(st2.nextToken());
 							String nom = st2.nextToken();
-							modifierPersonne(code, nom);
+							reponse = executionRequete.modifierPersonne(code, nom);
 						}
 					}
 					else if (typeRequete.equals("F")) {
@@ -65,7 +72,7 @@ public class GestionnaireRequete {
 						if (st2.countTokens() == 2) {
 							int code = Integer.parseInt(st2.nextToken());
 							String nom = st2.nextToken();
-							supprimerPersonne(code, nom);
+							reponse = executionRequete.supprimerPersonne(code, nom);
 						}
 					}
 					else if (typeRequete.equals("G")) {
@@ -73,7 +80,15 @@ public class GestionnaireRequete {
 						if (st2.countTokens() == 2) {
 							int codeTache = Integer.parseInt(st2.nextToken());
 							int codePersonne = Integer.parseInt(st2.nextToken());
-							ajouterAffectation(codeTache, codePersonne);
+							reponse = executionRequete.ajouterAffectation(codeTache, codePersonne);
+						}
+					}
+					else if (typeRequete.equals("H")) {
+						StringTokenizer st2 = new StringTokenizer(infosRequete, ",");
+						if (st2.countTokens() == 2) {
+							int codeTache = Integer.parseInt(st2.nextToken());
+							int codePersonne = Integer.parseInt(st2.nextToken());
+							reponse = executionRequete.modifierAffectation(codeTache, codePersonne);
 						}
 					}
 					else if (typeRequete.equals("I")) {
@@ -81,25 +96,44 @@ public class GestionnaireRequete {
 						if (st2.countTokens() == 2) {
 							int codeTache = Integer.parseInt(st2.nextToken());
 							int codePersonne = Integer.parseInt(st2.nextToken());
-							modifierAffectation(codeTache, codePersonne);
+							reponse = executionRequete.supprimerAffectation(codeTache, codePersonne);
 						}
 					}
 					else if (typeRequete.equals("J")) {
 						StringTokenizer st2 = new StringTokenizer(infosRequete, ",");
-						if (st2.countTokens() == 2) {
-							int codeTache = Integer.parseInt(st2.nextToken());
-							int codePersonne = Integer.parseInt(st2.nextToken());
-							supprimerAffectation(codeTache, codePersonne);
+						if (st2.countTokens() == 4) {
+							int codePredecesseur = Integer.parseInt(st2.nextToken());
+							int codeSuccesseur = Integer.parseInt(st2.nextToken());
+							int duree = Integer.parseInt(st2.nextToken());
+							int type = Integer.parseInt(st2.nextToken());
+							reponse = executionRequete.ajouterContrainte(codePredecesseur, codeSuccesseur, duree, type);
 						}
 					}
 					else if (typeRequete.equals("K")) {
-						
+						StringTokenizer st2 = new StringTokenizer(infosRequete, ",");
+						if (st2.countTokens() == 4) {
+							int codePredecesseur = Integer.parseInt(st2.nextToken());
+							int codeSuccesseur = Integer.parseInt(st2.nextToken());
+							int duree = Integer.parseInt(st2.nextToken());
+							int type = Integer.parseInt(st2.nextToken());
+							reponse = executionRequete.modifierContrainte(codePredecesseur, codeSuccesseur, duree, type);
+						}
 					}
 					else if (typeRequete.equals("L")) {
-						
+						StringTokenizer st2 = new StringTokenizer(infosRequete, ",");
+						if (st2.countTokens() == 4) {
+							int codePredecesseur = Integer.parseInt(st2.nextToken());
+							int codeSuccesseur = Integer.parseInt(st2.nextToken());
+							int duree = Integer.parseInt(st2.nextToken());
+							int type = Integer.parseInt(st2.nextToken());
+							reponse = executionRequete.supprimerContrainte(codePredecesseur, codeSuccesseur, duree, type);
+						}
 					}
 					else if (typeRequete.equals("M")) {
-						
+						if (infosRequete.length() == 1) {
+							int codeProjet = Integer.parseInt(infosRequete);
+							reponse = executionRequete.chargerProjet(codeProjet);
+						}
 					}
 				}
 			}
@@ -115,61 +149,6 @@ public class GestionnaireRequete {
 			return reponse;
 		}
 		return erreur;
-	}
-	
-	public void ajouterTache(int code, String nom, int duree) {
-		reponse = "Ajouter tâche : " + code + ", " + nom + ", " + duree;
-	}
-	
-	public void modifierTache(int code, String nom, int duree) {
-		reponse = "Modifier tâche : " + code + ", " + nom + ", " + duree;
-	}
-	
-	public void supprimerTache(int code) {
-		reponse = "Supprimer tâche : " + code;
-	}
-	
-	public void ajouterPersonne(int code, String nom) {
-		reponse = "Ajouter personne : " + code + ", " + nom;
-	}
-	
-	public void modifierPersonne(int code, String nom) {
-		reponse = "Modifier personne : " + code + ", " + nom;
-	}
-	
-	public void supprimerPersonne(int code, String nom) {
-		reponse = "Supprimer personne : " + code + ", " + nom;
-	}
-	
-	public void ajouterAffectation(int codeTache, int codePersonne) {
-		reponse = "Ajouter affectation : " + codeTache + ", " + codePersonne;
-	}
-	
-	public void modifierAffectation(int codeTache, int codePersonne) {
-		reponse = "Modifier affectation : " + codeTache + ", " + codePersonne;
-	}
-	
-	public void supprimerAffectation(int codeTache, int codePersonne) {
-		reponse = "Supprimer affectation : " + codeTache + ", " + codePersonne;
-	}
-	
-	public void ajouterContrainte(int codePredecesseur, int codeSuccesseur, int duree, int type) {
-		reponse = "Ajouter contrainte : " + codePredecesseur + ", " + codeSuccesseur + ", " +
-					duree + ", " + type;
-	}
-	
-	public void modifierContrainte(int codePredecesseur, int codeSuccesseur, int duree, int type) {
-		reponse = "Modifier contrainte : " + codePredecesseur + ", " + codeSuccesseur + ", " +
-					duree + ", " + type;
-	}
-	
-	public void supprimerContrainte(int codePredecesseur, int codeSuccesseur, int duree, int type) {
-		reponse = "Supprimer contrainte : " + codePredecesseur + ", " + codeSuccesseur + ", " +
-					duree + ", " + type;
-	}
-	
-	public void chargerProjet(int codeProjet) {
-		reponse = "Chargement projet : " + codeProjet;
 	}
 }
 
