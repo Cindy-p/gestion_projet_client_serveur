@@ -21,9 +21,9 @@ public class Client {
 		try {
 			emetteur = new Socket(adresseIPServeur, port);
 		} catch (UnknownHostException e) {
-			System.out.println("Impossible de trouver l'hôte du serveur.");
+			System.out.println("Impossible de trouver l'hÃ´te du serveur.");
 		} catch (IOException e) {
-			System.out.println("Problème d'E/S.");
+			System.out.println("ProblÃ¨me d'E/S.");
 		}
 	}
 	
@@ -32,7 +32,7 @@ public class Client {
 			try {
 				return new PrintWriter(emetteur.getOutputStream());
 			} catch (IOException e) {
-				System.out.println("Problème de récupération du flux sortant sur le client.");
+				System.out.println("ProblÃ¨me de rÃ©cupÃ©ration du flux sortant sur le client.");
 			}
 		}
 		return null;
@@ -43,7 +43,7 @@ public class Client {
 			try {
 				return new BufferedReader(new InputStreamReader(emetteur.getInputStream()));
 			} catch (IOException e) {
-				System.out.println("Problème de récupération du flux entrant sur le client.");
+				System.out.println("ProblÃ¨me de rÃ©cupÃ©ration du flux entrant sur le client.");
 			}
 		}
 		return null;
@@ -53,15 +53,22 @@ public class Client {
 		boolean fini = false;
 		String requete = "";
 		String reponse = "";
+		int projet = 0;
 		PrintWriter fluxSortant = fluxSortant();
 		BufferedReader fluxEntrant = fluxEntrant();
 		
+		while (projet == 0){
+			projet = Outils.lireEntier("NÂ° du projet : ");
+			
+			fluxSortant.println(projet);
+			fluxSortant.flush();
+		}
 		while (!fini && fluxSortant != null) {
 			requete = Outils.lireChaine("Client> ");
 
 			// EMISSION DE L'ORDRE SUR LE SERVEUR
 			fluxSortant.println(requete);
-			// On force la socket à vider le buffer de son flux sortant
+			// On force la socket Ã  vider le buffer de son flux sortant
 			fluxSortant.flush();
 
 			// RECEPTION DE LA REPONSE DU SERVEUR
@@ -69,7 +76,7 @@ public class Client {
 				reponse = fluxEntrant.readLine();
 				System.out.println("Client> " + reponse);
 			} catch (IOException e) {
-				System.out.println("Problème d'E/S.");
+				System.out.println("ProblÃ¨me d'E/S.");
 			}
 
 			if (requete.toUpperCase().equals("QUITTER")) {
@@ -82,15 +89,15 @@ public class Client {
 	}
 	
 	private void quitter() {
-		System.out.println("Déconnexion du client...");
+		System.out.println("DÃ©connexion du client...");
 		if (emetteur != null) {
 			try {
 				emetteur.close();
 			} catch (IOException e) {
-				System.out.println("Problème de déconnexion.");
+				System.out.println("ProblÃ¨me de dÃ©connexion.");
 			}
 		}
-		System.out.println("Client déconnecté. Bye !");
+		System.out.println("Client dÃ©connectÃ©. Bye !");
 	}
 	
 	public void lancerSession() {
@@ -101,7 +108,7 @@ public class Client {
 	
 	public static void main(String[] args) {
 		String hote = Outils.lireChaine("Adresse IP du serveur : ");
-		int port = Outils.lireEntier("N° du port de connexion sur le serveur : ");
+		int port = Outils.lireEntier("NÂ° du port de connexion sur le serveur : ");
 		Client client = new Client(hote, port);
 		client.lancerSession();
 	}
