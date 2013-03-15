@@ -57,12 +57,12 @@ public class Client {
 		PrintWriter fluxSortant = fluxSortant();
 		BufferedReader fluxEntrant = fluxEntrant();
 		
-		while (projet == 0){
+		/*while (projet == 0){
 			projet = Outils.lireEntier("N° du projet : ");
 			
 			fluxSortant.println(projet);
 			fluxSortant.flush();
-		}
+		}*/
 		
 		while (!fini && fluxSortant != null) {
 			requete = Outils.lireChaine("Client> ");

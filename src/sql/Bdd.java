@@ -16,14 +16,14 @@ public class Bdd {
 		
 		try {
 			Class.forName(pilote);
-			System.out.println("Chargement driver OK.");
+//			System.out.println("Chargement driver OK.");
 			
 			String url = "jdbc:mysql://localhost/gestion_proj";
 			user = "root";
 			password = "";
 			
 			conn = DriverManager.getConnection(url, user, password);
-			System.out.println("Connexion effective.");
+//			System.out.println("Connexion effective.");
 			
 		} catch (Exception ex) {
 			System.err.println("Erreur : " + ex);
@@ -32,31 +32,40 @@ public class Bdd {
 	
 	public boolean executerRequeteSelection(String sql) {
 		boolean rep = true;
+		int num_projet = 0;	
+		System.out.println("\tRequête à executer : " + sql);
 		
 		try {
 			Statement ordre = conn.createStatement();
 			ResultSet resultat = ordre.executeQuery(sql);
 			
+			
 			int nbCols = resultat.getMetaData().getColumnCount();
-				
+			
 			// Pour chaque ligne
 			while (resultat.next()) {
 				// Pour chaque colonne
 				for (int col = 1 ; col <= nbCols ; col++) {
 					String type = resultat.getMetaData().getColumnTypeName(col);
 					if (type.equals("VARCHAR"))
-						System.out.print(resultat.getString(col) + "\t");
-					else if (type.equals("INT UNSIGNED"))
-						System.out.print(resultat.getInt(col) + "\t");
+						System.out.println("\tDescription : " + resultat.getString(col));
+					else if (type.equals("INT UNSIGNED")){
+						num_projet = resultat.getInt(col);
+						System.out.println("\n\tN° projet : " + num_projet);
+					}
 					else if (type.equals("CHAR"))
-						System.out.print(resultat.getString(col) + "\t");
+						System.out.println("\tNom : " + resultat.getString(col));
 				} 
-				System.out.println();
 			} 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.err.println("Erreur : " + ex);
 			rep = false;
+		}
+		System.out.println("\n\tRequête effectuée : " + rep);
+		if (rep == true && num_projet != 0){
+			System.out.println("\n\tChangement de projet...");
+			System.out.println("\nOpérations sur le projet n°" + num_projet);
 		}
 		return rep;
 	}
@@ -65,14 +74,20 @@ public class Bdd {
 		int res = -1;
 		boolean rep = true;
 		
+		System.out.println("\tRequête à executer : " + req);
+		
 		try {
 			Statement ordre = conn.createStatement();
 			res = ordre.executeUpdate(req);
+			
+			if(res == -1 || res == 0)
+				rep = false;
 			
 		} catch (Exception ex) {
 			System.err.println("Erreur : " + ex);
 			rep = false;
 		}
+		System.out.println("\tRequête effectuée : " + rep);
 		return rep;
 	}
 }
