@@ -1,4 +1,5 @@
 package modele;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,12 +12,12 @@ public class Client {
 	private String adresseIPServeur = "127.0.0.1";
 	private int port = 8189;
 	private Socket emetteur = null;
-	
+
 	public Client(String adresseIPServeur, int port) {
 		this.adresseIPServeur = adresseIPServeur;
 		this.port = port;
 	}
-	
+
 	private void init() {
 		try {
 			emetteur = new Socket(adresseIPServeur, port);
@@ -26,13 +27,14 @@ public class Client {
 			System.out.println("Problème d'E/S.");
 		}
 	}
-	
+
 	private PrintWriter fluxSortant() {
 		if (emetteur != null) {
 			try {
 				return new PrintWriter(emetteur.getOutputStream());
 			} catch (IOException e) {
-				System.out.println("Problème de récupération du flux sortant sur le client.");
+				System.out
+						.println("Problème de récupération du flux sortant sur le client.");
 			}
 		}
 		return null;
@@ -41,14 +43,16 @@ public class Client {
 	private BufferedReader fluxEntrant() {
 		if (emetteur != null) {
 			try {
-				return new BufferedReader(new InputStreamReader(emetteur.getInputStream()));
+				return new BufferedReader(new InputStreamReader(
+						emetteur.getInputStream()));
 			} catch (IOException e) {
-				System.out.println("Problème de récupération du flux entrant sur le client.");
+				System.out
+						.println("Problème de récupération du flux entrant sur le client.");
 			}
 		}
 		return null;
 	}
-	
+
 	private void emissionVersServeur() {
 		boolean fini = false;
 		String requete = "";
@@ -56,14 +60,13 @@ public class Client {
 		int projet = 0;
 		PrintWriter fluxSortant = fluxSortant();
 		BufferedReader fluxEntrant = fluxEntrant();
-		
-		/*while (projet == 0){
-			projet = Outils.lireEntier("N° du projet : ");
-			
-			fluxSortant.println(projet);
-			fluxSortant.flush();
-		}*/
-		
+
+		/*
+		 * while (projet == 0){ projet = Outils.lireEntier("N° du projet : ");
+		 * 
+		 * fluxSortant.println(projet); fluxSortant.flush(); }
+		 */
+
 		while (!fini && fluxSortant != null) {
 			requete = Outils.lireChaine("Client> ");
 
@@ -88,7 +91,7 @@ public class Client {
 			}
 		}
 	}
-	
+
 	private void quitter() {
 		System.out.println("Déconnexion du client...");
 		if (emetteur != null) {
@@ -100,16 +103,17 @@ public class Client {
 		}
 		System.out.println("Client déconnecté. Bye !");
 	}
-	
+
 	public void lancerSession() {
 		init();
 		emissionVersServeur();
 		quitter();
 	}
-	
+
 	public static void main(String[] args) {
 		String hote = Outils.lireChaine("Adresse IP du serveur : ");
-		int port = Outils.lireEntier("N° du port de connexion sur le serveur : ");
+		int port = Outils
+				.lireEntier("N° du port de connexion sur le serveur : ");
 		Client client = new Client(hote, port);
 		client.lancerSession();
 	}

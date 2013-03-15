@@ -23,7 +23,7 @@ public class ServeurMultiClients {
 			System.out.println("Impossibilité de créer un serveur de socket");
 		}
 	}
-
+	
 	public void stopServeur() {
 		this.stopServeur = true;
 		try {
