@@ -5,14 +5,18 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Date;
 
 import sql.GenerateurRequetes;
 
 
-public class ServeurMonoClient {
+public class ServeurMultiClients {
+	private ArrayList<Thread> connexionsClient = new ArrayList<Thread>();
+	private int numeroClient = 1;
 	private Socket ecouteur = null;
 	private ServerSocket serveur = null;
+	private boolean stopServeur = false;
 
 	private String adresseIP = "127.0.0.1";
 	private int port = 8189;
@@ -21,7 +25,7 @@ public class ServeurMonoClient {
 	private void init() {
 		try {
 			serveur = new ServerSocket(port);
-			System.out.println("Serveur Mono Client");
+			System.out.println("Serveur Multi Clients");
 		} catch (IOException e) {
 			System.out.println("Impossibilité de créer un serveur de socket.");
 		}
@@ -29,15 +33,30 @@ public class ServeurMonoClient {
 	
 	// Attente d'une connexion d'un client
 	// Récupération d'une socket vers le client
-	private void attenteConnexionClient() {
+	private void attenteConnexionClients() {
+
 		if (serveur != null) {
-			System.out.println("Attente de la connexion du client...");
-			try {
-				ecouteur = serveur.accept();
-				if (ecouteur != null)
-					System.out.println("Connexion effective avec le client " + ecouteur.getRemoteSocketAddress());
-			} catch (IOException e) {
-				System.out.println("Erreur connexion client : " + e.getMessage());
+
+			Socket s = null;
+			while (!stopServeur) {
+				System.out.println("Attente de la connexion du client n�"
+						+ numeroClient + "...");
+				try {
+					s = serveur.accept();
+					if (s != null) {
+						System.out
+								.println("Connexion effective avec le client "
+										+ s.getRemoteSocketAddress());
+						ConnecteurClient cc = new ConnecteurClient(s,
+								numeroClient, this);
+						Thread cct = new Thread(cc);
+						connexionsClient.add(cct);
+						cct.start();
+						numeroClient++;
+					}
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
 			}
 		}
 	}
@@ -140,7 +159,7 @@ public class ServeurMonoClient {
 	}
 
 	public static void main(String[] args) {
-		ServeurMonoClient serveurMonoClient = new ServeurMonoClient();
-		serveurMonoClient.lancerSession();
+		ServeurMultiClients serveurMultiClients = new ServeurMultiClients();
+		serveurMultiClients.lancerSession();
 	}
 }

@@ -63,6 +63,7 @@ public class Client {
 			fluxSortant.println(projet);
 			fluxSortant.flush();
 		}
+		
 		while (!fini && fluxSortant != null) {
 			requete = Outils.lireChaine("Client> ");
 
