@@ -70,32 +70,32 @@ public class ServeurMultiClients {
 	private void ecouterClient() {
 		String requete = "";
 		boolean fini = false;
-		String req_test;
+//		String req_test;
 
 		BufferedReader fluxEntrant = fluxEntrant();
 		PrintWriter fluxSortant = fluxSortant();
 		
-		int num_projet = 0;
+//		int num_projet = 0;
 		
-		while (num_projet == 0){
-			try {
-				num_projet = Integer.parseInt(fluxEntrant.readLine());
-				
-				GenerateurRequetes tnp = new GenerateurRequetes();
-				req_test = "M#" + num_projet;
-				tnp.traitementRequete(req_test);
-				
-				if (tnp.reponse().equals("M#OK#"+num_projet)){
-					System.out.println("Opérations sur le projet n°" + num_projet);
-				}
-				else 
-					num_projet = 0;
-			}catch(IOException e){
-				System.out.println("Erreur entrée/sortie -> Quitter");
-			}
-		}
+//		while (num_projet == 0){
+//			try {
+//				num_projet = Integer.parseInt(fluxEntrant.readLine());
+//				
+//				GenerateurRequetes tnp = new GenerateurRequetes();
+//				req_test = "M#" + num_projet;
+//				tnp.traitementRequete(req_test);
+//				
+//				if (tnp.reponse().equals("M#OK#"+num_projet)){
+//					System.out.println("Opérations sur le projet n°" + num_projet);
+//				}
+//				else 
+//					num_projet = 0;
+//			}catch(IOException e){
+//				System.out.println("Erreur entrée/sortie -> Quitter");
+//			}
+//		}
 		
-		GenerateurRequetes gr = new GenerateurRequetes(num_projet);
+		GenerateurRequetes gr = new GenerateurRequetes();
 
 		while (!fini && fluxEntrant != null && fluxSortant != null) {
 			// RECUPERATION DE LA REQUETE

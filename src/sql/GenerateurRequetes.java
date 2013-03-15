@@ -5,27 +5,10 @@ import java.util.StringTokenizer;
 public class GenerateurRequetes {
 	private String erreur;
 	private String reponse;
-	private String[] typesRequetes;
-	private int projet; //contient le numero du projet sur lequel on execute les requêtes
-	
-	public GenerateurRequetes (){
-		erreur = "";
-		reponse = "";
-		typesRequetes = new String[] {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"};
-	}
-	public GenerateurRequetes (int num_projet){
-		erreur = "";
-		reponse = "";
-		typesRequetes = new String[] {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"};
-		projet = num_projet;
-	}
+	private String[] typesRequetes = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"};
 	
 	public void setReponse(String reponse) {
 		this.reponse = reponse;
-	}
-	
-	public void setProjet(int num_projet) {
-		this.projet = num_projet;
 	}
 
 	public void traitementRequete(String requete) {
@@ -49,10 +32,11 @@ public class GenerateurRequetes {
 				if (lettreRequete.equals(typeRequete)) {
 					if (typeRequete.equals("A")) {
 						StringTokenizer st2 = new StringTokenizer(infosRequete, ",");
-						if (st2.countTokens() == 2) {
+						if (st2.countTokens() == 3) {
 							//int code = Integer.parseInt(st2.nextToken());
 							String nom = st2.nextToken();
 							int duree = Integer.parseInt(st2.nextToken());
+							int projet = Integer.parseInt(st2.nextToken());
 							req = "INSERT INTO tache VALUES ( null, '" + nom + "', " + duree + ", " + projet + ")"; 
 							rep = executer.executerRequeteMAJ(req);
 							if( rep == true)
@@ -68,6 +52,7 @@ public class GenerateurRequetes {
 							int code = Integer.parseInt(st2.nextToken());
 							String nom = st2.nextToken();
 							int duree = Integer.parseInt(st2.nextToken());
+							int projet = Integer.parseInt(st2.nextToken());
 							req = "UPDATE tache SET tache_nom = '" + nom + "', tache_duree = " + duree + ", projet_numero = " + projet + " WHERE tache_numero = " + code; 
 							rep = executer.executerRequeteMAJ(req);
 							if(rep == true)
@@ -88,11 +73,9 @@ public class GenerateurRequetes {
 						}
 					}
 					else if (typeRequete.equals("D")) {
-						StringTokenizer st2 = new StringTokenizer(infosRequete, ",");
-						if (st2.countTokens() == 2) {
-							int code = Integer.parseInt(st2.nextToken());
-							String nom = st2.nextToken();
-							req = "INSERT INTO personne VALUES (" + code + ", '" + nom + "')"; 
+						if (infosRequete.length() > 0) {
+							String nom = infosRequete;
+							req = "INSERT INTO personne VALUES ( null, '" + nom + "')"; 
 							rep = executer.executerRequeteMAJ(req);
 							if(rep == true)
 								reponse = "d#OK#" + infosRequete;
@@ -102,7 +85,7 @@ public class GenerateurRequetes {
 					}
 					else if (typeRequete.equals("E")) {
 						StringTokenizer st2 = new StringTokenizer(infosRequete, ",");
-						if (st2.countTokens() == 2) {
+						if (st2.countTokens() == 1) {
 							int code = Integer.parseInt(st2.nextToken());
 							String nom = st2.nextToken();
 							req = "UPDATE personne SET personne_nom = '" + nom + "' WHERE personne_numero = " + code; 
@@ -219,7 +202,6 @@ public class GenerateurRequetes {
 							rep = executer.executerRequeteSelection(req);
 							if(rep == true){
 								reponse = "m#OK#";
-								this.setProjet(codeProjet);
 							}else
 								reponse = "m#KO#";
 							

@@ -33,12 +33,12 @@ public class Bdd {
 	public boolean executerRequeteSelection(String sql) {
 		boolean rep = true;
 		int num_projet = 0;	
+		int taille = 0;
 		System.out.println("\tRequête à executer : " + sql);
 		
 		try {
 			Statement ordre = conn.createStatement();
 			ResultSet resultat = ordre.executeQuery(sql);
-			
 			
 			int nbCols = resultat.getMetaData().getColumnCount();
 			
@@ -56,12 +56,16 @@ public class Bdd {
 					else if (type.equals("CHAR"))
 						System.out.println("\tNom : " + resultat.getString(col));
 				} 
+				taille++;
 			} 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.err.println("Erreur : " + ex);
 			rep = false;
 		}
+		if (taille == 0)
+			rep = false;
+		
 		System.out.println("\n\tRequête effectuée : " + rep);
 		if (rep == true && num_projet != 0){
 			System.out.println("\n\tChangement de projet...");
