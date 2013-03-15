@@ -8,6 +8,11 @@ public class GenerateurRequetes {
 	private String[] typesRequetes;
 	private int projet; //contient le numero du projet sur lequel on execute les requêtes
 	
+	public GenerateurRequetes (){
+		erreur = "";
+		reponse = "";
+		typesRequetes = new String[] {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"};
+	}
 	public GenerateurRequetes (int num_projet){
 		erreur = "";
 		reponse = "";
@@ -44,13 +49,12 @@ public class GenerateurRequetes {
 				if (lettreRequete.equals(typeRequete)) {
 					if (typeRequete.equals("A")) {
 						StringTokenizer st2 = new StringTokenizer(infosRequete, ",");
-						if (st2.countTokens() == 3) {
-							int code = Integer.parseInt(st2.nextToken());
+						if (st2.countTokens() == 2) {
+							//int code = Integer.parseInt(st2.nextToken());
 							String nom = st2.nextToken();
 							int duree = Integer.parseInt(st2.nextToken());
-							req = "INSERT INTO tache VALUES (" + code + ", '" + nom + "', " + duree + ", " + projet + ")"; 
+							req = "INSERT INTO tache VALUES ( null, '" + nom + "', " + duree + ", " + projet + ")"; 
 							rep = executer.executerRequeteMAJ(req);
-							System.out.println(rep);
 							if( rep == true)
 								reponse = "a#OK#" + infosRequete;
 							else
@@ -72,7 +76,6 @@ public class GenerateurRequetes {
 								reponse = "b#KO#";
 						}
 					}
-					//Ne fonctionne pas
 					else if (typeRequete.equals("C")) {
 						if (infosRequete.length() == 1 || infosRequete.length() == 2) {
 							int code = Integer.parseInt(infosRequete);

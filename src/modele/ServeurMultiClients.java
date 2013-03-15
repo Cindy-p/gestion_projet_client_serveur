@@ -10,7 +10,7 @@ import java.util.Date;
 import sql.GenerateurRequetes;
 
 
-public class ServeurMonoClient {
+public class ServeurMultiClients {
 	private Socket ecouteur = null;
 	private ServerSocket serveur = null;
 
@@ -70,6 +70,7 @@ public class ServeurMonoClient {
 	private void ecouterClient() {
 		String requete = "";
 		boolean fini = false;
+		String req_test;
 
 		BufferedReader fluxEntrant = fluxEntrant();
 		PrintWriter fluxSortant = fluxSortant();
@@ -79,7 +80,16 @@ public class ServeurMonoClient {
 		while (num_projet == 0){
 			try {
 				num_projet = Integer.parseInt(fluxEntrant.readLine());
-				System.out.println(num_projet);
+				
+				GenerateurRequetes tnp = new GenerateurRequetes();
+				req_test = "M#" + num_projet;
+				tnp.traitementRequete(req_test);
+				
+				if (tnp.reponse().equals("M#OK#"+num_projet)){
+					System.out.println("Opérations sur le projet n°" + num_projet);
+				}
+				else 
+					num_projet = 0;
 			}catch(IOException e){
 				System.out.println("Erreur entrée/sortie -> Quitter");
 			}
@@ -95,7 +105,7 @@ public class ServeurMonoClient {
 				System.out.println("Erreur entrée/sortie -> Quitter");
 			}
 			
-			System.out.println("Reçu " + new Date() + " : " + requete);
+			System.out.println("\nReçu " + new Date() + " : " + requete);
 			
 			if (requete.toUpperCase().equals("QUITTER"))
 				fini = true;
@@ -140,7 +150,7 @@ public class ServeurMonoClient {
 	}
 
 	public static void main(String[] args) {
-		ServeurMonoClient serveurMonoClient = new ServeurMonoClient();
-		serveurMonoClient.lancerSession();
+		ServeurMultiClients serveurMultiClients = new ServeurMultiClients();
+		serveurMultiClients.lancerSession();
 	}
 }
